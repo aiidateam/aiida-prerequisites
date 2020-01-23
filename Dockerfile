@@ -75,5 +75,8 @@ COPY my_init.d/create-system-user.sh /etc/my_init.d/20_create-system-user.sh
 COPY opt/start-postgres.sh /opt/start-postgres.sh
 COPY my_init.d/start-postgres.sh /etc/my_init.d/30_start-postgres.sh
 
+# Health check
+HEALTHCHECK --interval=4s CMD su $SYSTEM_USER -c "/usr/lib/postgresql/10/bin/pg_ctl -D /home/$SYSTEM_USER/.postgresql status" || exit 1
+
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
