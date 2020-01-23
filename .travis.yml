@@ -20,10 +20,9 @@ install:
     - docker build -t aiida-prerequisites .
     - docker run -d aiida-prerequisites
     - "export DOCKERID=`docker ps -qf 'ancestor=aiida-prerequisites'`"
-    - while [[ \"healthy\" != `docker inspect --format='{{json .State.Health.Status}}' $DOCKERID` ]]; do sleep 1; done
+    - docker exec --tty $DOCKERID wait-for-services
 
-# I just run a command with verdi that returns a zero error code to see if
-# verdi is installed properly
+# Check that PostgreSQL and RabbitMQ are up.
 script:
     - "echo \"Docker ID: $DOCKERID\""
     - "docker exec --tty --user aiida \"$DOCKERID\" /bin/bash -l -c '/usr/lib/postgresql/10/bin/pg_ctl -D /home/$SYSTEM_USER/.postgresql status'" # checking postgres

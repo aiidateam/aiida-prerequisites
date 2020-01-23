@@ -1,0 +1,10 @@
+#!/bin/bash
+set -em
+
+while true; do
+   if [[ -f /root/INIT_COMPLETED ]] ; then
+       break
+   fi
+   sleep 1
+done
+
