@@ -68,17 +68,17 @@ RUN pip3 install -U pip setuptools wheel
 # Launch rabbitmq server
 COPY my_init.d/start-rabbitmq.sh /etc/my_init.d/10_start-rabbitmq.sh
 
-# Create system user
+# Create system user.
 COPY my_init.d/create-system-user.sh /etc/my_init.d/20_create-system-user.sh
 
-# Launch postgres server
+# Launch postgres server.
 COPY opt/start-postgres.sh /opt/start-postgres.sh
 COPY my_init.d/start-postgres.sh /etc/my_init.d/30_start-postgres.sh
 
-# Chqeck if init script is finished
+# Check if init script is finished.
 COPY my_init.d/finalize_init.sh /etc/my_init.d/99_finalize_init.sh
 
-# Health check
+# Health check.
 HEALTHCHECK --interval=10s CMD ls /root/INIT_COMPLETED || exit 1
 
 # Use baseimage-docker's init system.
