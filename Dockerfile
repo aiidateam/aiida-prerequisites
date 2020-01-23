@@ -59,9 +59,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean all
 
-# Add PostgreSQL bin folder to PATH variable
-ENV PATH $PATH:/usr/lib/postgresql/10/bin
-
 # Set Python3 be the default python version
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
@@ -79,7 +76,7 @@ COPY opt/start-postgres.sh /opt/start-postgres.sh
 COPY my_init.d/start-postgres.sh /etc/my_init.d/30_start-postgres.sh
 
 # Health check
-HEALTHCHECK --interval=10s CMD su $SYSTEM_USER -c "pg_ctl -D /home/$SYSTEM_USER/.postgresql status" || exit 1
+HEALTHCHECK --interval=10s CMD su $SYSTEM_USER -c "/usr/lib/postgresql/10/bin/pg_ctl -D /home/$SYSTEM_USER/.postgresql status" || exit 1
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
