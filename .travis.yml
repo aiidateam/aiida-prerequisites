@@ -26,4 +26,5 @@ install:
 # verdi is installed properly
 script:
     - "echo \"Docker ID: $DOCKERID\""
-    - "docker exec --tty --user aiida \"$DOCKERID\" /bin/bash -l -c '/usr/lib/postgresql/10/bin/pg_ctl -D /home/$SYSTEM_USER/.postgresql status'"
+    - "docker exec --tty --user aiida \"$DOCKERID\" /bin/bash -l -c '/usr/lib/postgresql/10/bin/pg_ctl -D /home/$SYSTEM_USER/.postgresql status'" # checking postgres
+    - "docker exec --tty --user root \"$DOCKERID\" /bin/bash -l -c 'service rabbitmq-server status'" # checking rabbitmq
