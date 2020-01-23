@@ -13,9 +13,6 @@ if [ ! -d /home/$SYSTEM_USER/.postgresql ]; then
    ${PGBIN}/initdb -D /home/$SYSTEM_USER/.postgresql
    echo "unix_socket_directories = '/home/$SYSTEM_USER/.postgresql'" >> /home/$SYSTEM_USER/.postgresql/postgresql.conf
    ${PSQL_START_CMD}
-   psql -h localhost -d template1 -c "CREATE USER aiida WITH PASSWORD 'aiida_db_passwd';"
-   psql -h localhost -d template1 -c "CREATE DATABASE aiidadb OWNER aiida;"
-   psql -h localhost -d template1 -c "GRANT ALL PRIVILEGES ON DATABASE aiidadb to aiida;"
 
 # else don't
 else
