@@ -1,4 +1,4 @@
-# AiiDA docker stack
+# AiiDA Prerequisites
 
 This repository adds
 [PostgreSQL](https://www.postgresql.org/) and [RabbitMQ](https://www.rabbitmq.com/) servers on top of [phusion](https://github.com/phusion/baseimage-docker) base image. Additionally, it creates a system profile ready to setup AiiDA under it.
