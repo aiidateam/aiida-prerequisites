@@ -20,7 +20,7 @@ install:
     - docker build -t aiida-prerequisites .
     - docker run -d aiida-prerequisites
     - "export DOCKERID=`docker ps -qf 'ancestor=aiida-prerequisites'`"
-    - docker exec --tty \"$DOCKERID\" wait-for-services
+    - docker exec --tty $DOCKERID wait-for-services
 
 # Check that PostgreSQL and RabbitMQ are up.
 script:
