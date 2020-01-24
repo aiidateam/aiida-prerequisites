@@ -78,8 +78,8 @@ COPY my_init.d/start-postgres.sh /etc/my_init.d/30_start-postgres.sh
 # Check if init script is finished.
 COPY my_init.d/finalize_init.sh /etc/my_init.d/99_finalize_init.sh
 
-# Health check.
-HEALTHCHECK --interval=10s CMD ls /root/INIT_COMPLETED || exit 1
+# Add wait-for-services script.
+COPY bin/wait-for-services /usr/local/bin/wait-for-services
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
