@@ -4,11 +4,16 @@ FROM phusion/baseimage:0.11
 MAINTAINER AiiDA Team
 
 # Initial parameters
+
+# Note: The following config can be changed at build time:
+#   docker build  --build-arg NB_UID=200
 ARG NB_USER="aiida"
-ENV SYSTEM_USER=${NB_USER}
-ARG NB_UID="1000"
-ENV SYSTEM_USER_UID=${NB_UID}
 ARG NB_GID="1000"
+ARG NB_UID="1000"
+
+ENV SYSTEM_USER=${NB_USER}
+ENV SYSTEM_USER_UID=${NB_UID}
+ENV PYTHONPATH /home/$SYSTEM_USER
 
 USER root
 
