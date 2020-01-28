@@ -5,14 +5,17 @@ MAINTAINER AiiDA Team
 
 # Initial parameters
 
-# Note: The following config can be changed at build time:
-#   docker build  --build-arg NB_UID=200
-ARG NB_USER="aiida"
-ARG NB_GID="1000"
-ARG NB_UID="1000"
+# Use the following arguments during *build* time:
+# $ docker build  --build-arg NB_UID=200
+ARG NB_USER "aiida"
+ARG NB_UID "1000"
+ARG NB_GID "1000"
 
-ENV SYSTEM_USER=${NB_USER}
-ENV SYSTEM_USER_UID=${NB_UID}
+# Use the following variables when running docker:
+# $ docker run -e SYSTEM_USER=aiida2
+ENV SYSTEM_USER ${NB_USER}
+ENV SYSTEM_USER_UID ${NB_UID}
+ENV SYSTEM_USER_GID ${NB_GID}
 ENV PYTHONPATH /home/$SYSTEM_USER
 
 USER root
