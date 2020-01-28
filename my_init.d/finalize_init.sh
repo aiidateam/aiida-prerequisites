@@ -1,5 +1,5 @@
 #!/bin/bash
 set -em
 
-touch /root/INIT_COMPLETED
+touch /opt/INIT_COMPLETED
 

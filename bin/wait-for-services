@@ -2,7 +2,7 @@
 set -em
 
 while true; do
-   if [[ -f /root/INIT_COMPLETED ]] ; then
+   if [[ -f /opt/INIT_COMPLETED ]] ; then
        break
    fi
    sleep 1
