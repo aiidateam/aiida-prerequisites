@@ -7,9 +7,9 @@ MAINTAINER AiiDA Team
 
 # Use the following arguments during *build* time:
 # $ docker build  --build-arg NB_UID=200
-ARG NB_USER "aiida"
-ARG NB_UID "1000"
-ARG NB_GID "1000"
+ARG NB_USER="aiida"
+ARG NB_UID="1000"
+ARG NB_GID="1000"
 
 # Use the following variables when running docker:
 # $ docker run -e SYSTEM_USER=aiida2
