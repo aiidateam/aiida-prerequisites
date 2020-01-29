@@ -3,16 +3,13 @@ set -em
 
 PERFORM_CHOWN=false
 
-# Create user's home folder, if does not exist already.
-if [[ ! -d /home/${SYSTEM_USER} ]]; then
-  mkdir /home/${SYSTEM_USER}
-  PERFORM_CHOWN=true
-fi
+# Create user's home folder, it should not exist at the beginning.
+mkdir -p /home/${SYSTEM_USER}
 
 # Add $SYSTEM_USER user (no password) if does not exist
 if ! id -u ${SYSTEM_USER} ; then
   useradd --home /home/${SYSTEM_USER} --uid ${SYSTEM_USER_UID} --shell /bin/bash ${SYSTEM_USER}
-  PERFORM_CHOWN=true
+  chown ${SYSTEM_USER}:${SYSTEM_USER} /home/${SYSTEM_USER}
 fi
 
 # Add .bashrc file to the $SYSTEM_USER's home folder and updare it.
