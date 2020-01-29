@@ -12,7 +12,7 @@ if ! id -u ${SYSTEM_USER} ; then
   chown ${SYSTEM_USER}:${SYSTEM_USER} /home/${SYSTEM_USER}
 fi
 
-# Add .bashrc file to the $SYSTEM_USER's home folder and updare it.
+# Add .bashrc file to the $SYSTEM_USER's home folder.
 if [[ ! -f /home/${SYSTEM_USER}/.bashrc ]]; then
   cp -v /etc/skel/.bashrc  /home/${SYSTEM_USER}/
   echo "export PATH=$PATH:\"/home/${SYSTEM_USER}/.local/bin\"" >> /home/${SYSTEM_USER}/.bashrc
@@ -44,4 +44,3 @@ fi
 if [[ ${PERFORM_CHOWN} == true ]]; then
   chown ${SYSTEM_USER}:${SYSTEM_USER} /home/${SYSTEM_USER} -R
 fi
-
