@@ -14,7 +14,7 @@ The docker image:
 
 ## Wait for services
 The image provides a mechanism to wait untill all the services were launched by the statup scripts. However, it does not
-check that services did start. Example of usage:
+Example of usage:
 
 ```
 $ docker exec --tty $DOCKERID wait-for-services
