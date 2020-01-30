@@ -1,24 +1,43 @@
 # AiiDA Prerequisites
 
 This repository adds
-[PostgreSQL](https://www.postgresql.org/) and [RabbitMQ](https://www.rabbitmq.com/) servers on top of [phusion](https://github.com/phusion/baseimage-docker) base image. Additionally, it creates a system profile ready to setup AiiDA under it.
+[PostgreSQL](https://www.postgresql.org/) and [RabbitMQ](https://www.rabbitmq.com/) servers on top of [phusion base image](https://github.com/phusion/baseimage-docker). Additionally, it creates a system profile ready to setup AiiDA under it.
 
 
 # Docker image
 
-The docker image contains:
- * [PostgreSQL](https://www.postgresql.org/)
- * [RabbitMQ](https://www.rabbitmq.com/)
- * Configured Linux environment for $SYSTEM_USER.
+The docker image:
+ * Is based on [phusion base image](https://github.com/phusion/baseimage-docker).
+ * Installs and launches [PostgreSQL](https://www.postgresql.org/) for $SYSTEM_USER.
+ * Installs and launches [RabbitMQ](https://www.rabbitmq.com/).
+ * Configures Linux environment for $SYSTEM_USER.
 
 ## Wait for services
-This image provides a mechanism to wait untill all the services were launched by the statup scripts. However, it does not
+The image provides a mechanism to wait untill all the services were launched by the statup scripts. However, it does not
 check that services did start. Example of usage:
 
 ```
 $ docker exec --tty $DOCKERID wait-for-services
 ```
 This command will exit when all startup scripts are done.
+
+## Docker ARGs and ENVs
+The the following arguments can be used during *build* time:
+```
+$ docker build  --build-arg NB_UID=200
+```
+ARG NB_USER="aiida"
+ARG NB_UID="1000"
+ARG NB_GID="1000"
+
+The following variables can be used when running docker:
+```
+docker run -e SYSTEM_USER=aiida2
+```
+ENV SYSTEM_USER ${NB_USER}
+ENV SYSTEM_USER_UID ${NB_UID}
+ENV SYSTEM_USER_GID ${NB_GID}
+ENV PYTHONPATH /home/$SYSTEM_USER
 
 # Docker Hub repository
 
