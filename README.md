@@ -13,7 +13,7 @@ The docker image:
  * Configures Linux environment for $SYSTEM_USER.
 
 ## Wait for services
-The image provides a mechanism to wait untill all the services were launched by the statup scripts. However, it does not
+The image provides a mechanism to wait until the startup script has *launched* all services.
 Example of usage:
 
 ```
