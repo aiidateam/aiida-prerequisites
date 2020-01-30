@@ -22,23 +22,30 @@ $ docker exec --tty $DOCKERID wait-for-services
 This command will exit when all startup scripts are done.
 Note, however, that the mechanism does not check that all services are actually running.
 
-## Docker ARGs and ENVs
-The the following arguments can be used during *build* time:
-```
-$ docker build  --build-arg NB_UID=200
+## Docker ARGs
+The the following arguments can be set during *build* time:
 ```
 ARG NB_USER="aiida"
 ARG NB_UID="1000"
 ARG NB_GID="1000"
-
-The following variables can be used when running docker:
 ```
-docker run -e SYSTEM_USER=aiida2
+To modify their value do the following:
+```
+$ docker build  --build-arg NB_UID=200
+```
+## Docker ENVs
+The following environment variables can be set during container *startup*:
 ```
 ENV SYSTEM_USER ${NB_USER}
 ENV SYSTEM_USER_UID ${NB_UID}
 ENV SYSTEM_USER_GID ${NB_GID}
 ENV PYTHONPATH /home/$SYSTEM_USER
+```
+
+To modify their value do the following:
+```
+docker run -e SYSTEM_USER=aiida2
+```
 
 # Docker Hub repository
 
