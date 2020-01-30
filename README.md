@@ -20,6 +20,7 @@ check that services did start. Example of usage:
 $ docker exec --tty $DOCKERID wait-for-services
 ```
 This command will exit when all startup scripts are done.
+Note, however, that the mechanism does not check that all services are actually running.
 
 ## Docker ARGs and ENVs
 The the following arguments can be used during *build* time:
