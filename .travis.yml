@@ -19,17 +19,17 @@ addons:
 install:
     - docker build -t aiida-prerequisites .
     - mkdir tmp
-    - export DOCKERID=`run -v $PWD/tmp:/home/aiida -d aiida-prerequisites`
+    - "export DOCKERID=`docker run -v $PWD/tmp:/home/aiida -d aiida-prerequisites`"
+    - echo $DOCKERID
     - docker exec --tty --user root $DOCKERID wait-for-services
     - docker exec --tty --user aiida $DOCKERID wait-for-services
 
-# Check that PostgreSQL and RabbitMQ are up.
 script:
-    - echo "Docker ID: $DOCKERID"
-    - docker exec --tty --user aiida $DOCKERID /bin/bash -l -c '/usr/lib/postgresql/10/bin/pg_ctl -D /home/$SYSTEM_USER/.postgresql status' # checking postgres
-    - docker exec --tty --user root $DOCKERID /bin/bash -l -c 'service rabbitmq-server status' # checking rabbitmq
-    - cp tmp/.ssh/id_rsa . # copying id_rsa file from the mounted folder
-    - docker stop $DOCKERID # stopping the container
-    - export DOCKERID=`run -v $PWD/tmp:/home/aiida -d aiida-prerequisites`
+    - "echo \"Docker ID: $DOCKERID\""
+    - docker exec --tty --user aiida $DOCKERID /bin/bash -l -c '/usr/lib/postgresql/10/bin/pg_ctl -D /home/$SYSTEM_USER/.postgresql status' # Checking that postgres is up.
+    - docker exec --tty --user root $DOCKERID /bin/bash -l -c 'service rabbitmq-server status' # Checking that rabbitmq is up.
+    - cp tmp/.ssh/id_rsa . # Copying id_rsa file from the mounted folder.
+    - docker stop $DOCKERID # Stopping the container.
+    - "export DOCKERID=`docker run -v $PWD/tmp:/home/aiida -d aiida-prerequisites`" # Starting container using the same mounted folder.
     - docker exec --tty $DOCKERID wait-for-services
-    - diff id_rsa tmp/.ssh/id_rsa  # checking that the id_rsa file wasn't modified
+    - diff id_rsa tmp/.ssh/id_rsa  # Checking that the id_rsa file wasn't modified.
