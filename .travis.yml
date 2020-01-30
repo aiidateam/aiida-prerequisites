@@ -20,7 +20,6 @@ install:
     - docker build -t aiida-prerequisites .
     - mkdir tmp
     - export DOCKERID=`docker run -v $PWD/tmp:/home/aiida -d aiida-prerequisites`
-    - echo $DOCKERID
     - docker exec --tty --user root $DOCKERID wait-for-services
     - docker exec --tty --user aiida $DOCKERID wait-for-services
 
