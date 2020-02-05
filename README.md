@@ -29,10 +29,12 @@ ARG NB_USER="aiida"
 ARG NB_UID="1000"
 ARG NB_GID="1000"
 ```
+These define the default user name, user id and group id for containers launched from the image. 
 To modify their value do the following:
 ```
 $ docker build  --build-arg NB_UID=200
 ```
+
 ## Docker ENVs
 The following environment variables can be set during container *startup*:
 ```
