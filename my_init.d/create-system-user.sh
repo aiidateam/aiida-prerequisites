@@ -47,3 +47,6 @@ fi
 if [[ ${PERFORM_CHOWN} == true ]]; then
   chown ${SYSTEM_USER}:${SYSTEM_USER} /home/${SYSTEM_USER} -R
 fi
+
+# Prepare conda.
+su ${SYSTEM_USER} -c "/opt/conda/bin/conda init" 
