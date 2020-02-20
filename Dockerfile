@@ -96,5 +96,7 @@ COPY bin/wait-for-services /usr/local/bin/wait-for-services
 # Enable prompt color in the skeleton .bashrc before creating the default ${SYSTEM_USER}.
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
 
+COPY profile.d/activate_conda.sh /etc/profile.d/
+
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
