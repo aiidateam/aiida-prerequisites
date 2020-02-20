@@ -21,6 +21,9 @@ ENV MINICONDA_VERSION 4.7.12.1
 ENV MINICONDA_MD5 81c773ff87af5cfac79ab862942ab6b3
 ENV CONDA_VERSION 4.8.2
 
+# Always activate /etc/profile, otherwise conda won't work.
+ENV BASH_ENV /etc/profile
+
 USER root
 
 # Fix locales.
@@ -96,6 +99,7 @@ COPY bin/wait-for-services /usr/local/bin/wait-for-services
 # Enable prompt color in the skeleton .bashrc before creating the default ${SYSTEM_USER}.
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
 
+# Always activate conda.
 COPY profile.d/activate_conda.sh /etc/profile.d/
 
 # Use baseimage-docker's init system.
