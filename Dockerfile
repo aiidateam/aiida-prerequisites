@@ -80,6 +80,9 @@ RUN cd /tmp && \
     conda update --all --quiet --yes && \
     conda clean --all -f -y
 
+# This is needed to let non-root users create conda environments.
+RUN mkdir /opt/conda/pkgs && touch /opt/conda/pkgs/urls.txt
+
 # Launch rabbitmq server
 COPY my_init.d/start-rabbitmq.sh /etc/my_init.d/10_start-rabbitmq.sh
 
