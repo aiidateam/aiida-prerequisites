@@ -21,6 +21,9 @@ ENV MINICONDA_VERSION 4.7.12.1
 ENV MINICONDA_MD5 81c773ff87af5cfac79ab862942ab6b3
 ENV CONDA_VERSION 4.8.2
 
+# Always activate /etc/profile, otherwise conda won't work.
+ENV BASH_ENV /etc/profile
+
 USER root
 
 # Fix locales.
@@ -77,6 +80,9 @@ RUN cd /tmp && \
     conda update --all --quiet --yes && \
     conda clean --all -f -y
 
+# This is needed to let non-root users create conda environments.
+RUN mkdir /opt/conda/pkgs && touch /opt/conda/pkgs/urls.txt
+
 # Launch rabbitmq server
 COPY my_init.d/start-rabbitmq.sh /etc/my_init.d/10_start-rabbitmq.sh
 
@@ -95,6 +101,9 @@ COPY bin/wait-for-services /usr/local/bin/wait-for-services
 
 # Enable prompt color in the skeleton .bashrc before creating the default ${SYSTEM_USER}.
 RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashrc
+
+# Always activate conda.
+COPY profile.d/activate_conda.sh /etc/profile.d/
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]

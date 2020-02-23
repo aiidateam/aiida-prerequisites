@@ -49,4 +49,4 @@ if [[ ${PERFORM_CHOWN} == true ]]; then
 fi
 
 # Prepare conda.
-su ${SYSTEM_USER} -c "/opt/conda/bin/conda init" 
+su ${SYSTEM_USER} -c "/opt/conda/bin/conda init"
