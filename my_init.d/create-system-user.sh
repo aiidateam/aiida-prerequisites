@@ -48,5 +48,5 @@ if [[ ${PERFORM_CHOWN} == true ]]; then
   chown ${SYSTEM_USER}:${SYSTEM_USER} /home/${SYSTEM_USER} -R
 fi
 
-# Prepare conda.
+# Prepare conda. Otherwise creation of a new conda environment will fail.
 su ${SYSTEM_USER} -c "/opt/conda/bin/conda init"
