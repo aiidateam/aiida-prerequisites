@@ -16,6 +16,9 @@ if [ ! -d /home/${SYSTEM_USER}/.postgresql ]; then
 
 # else don't
 else
+    # Fix problem with kubernetes cluster that adds rws permissions to the group
+    # for more details see: https://github.com/materialscloud-org/aiidalab-z2jh-eosc/issues/5
+    chmod g-rwxs /home/${SYSTEM_USER}/.postgresql -R
 
     # stores return value in $?
     running=true
