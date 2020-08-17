@@ -83,11 +83,11 @@ RUN cd /tmp && \
 # This is needed to let non-root users create conda environments.
 RUN mkdir /opt/conda/pkgs && touch /opt/conda/pkgs/urls.txt
 
-# Launch rabbitmq server
-COPY my_init.d/start-rabbitmq.sh /etc/my_init.d/10_start-rabbitmq.sh
-
 # Create system user.
-COPY my_init.d/create-system-user.sh /etc/my_init.d/20_create-system-user.sh
+COPY my_init.d/create-system-user.sh /etc/my_init.d/10_create-system-user.sh
+
+# Launch rabbitmq server
+COPY my_init.d/start-rabbitmq.sh /etc/my_init.d/20_start-rabbitmq.sh
 
 # Launch postgres server.
 COPY opt/start-postgres.sh /opt/start-postgres.sh
