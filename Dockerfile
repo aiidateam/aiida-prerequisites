@@ -1,6 +1,6 @@
 # See https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
 # Based on Ubuntu 18.04 since v0.11
-FROM phusion/baseimage:0.11
+FROM phusion/baseimage:bionic-1.0.0
 MAINTAINER AiiDA Team
 
 # Use the following arguments during *build* time:
