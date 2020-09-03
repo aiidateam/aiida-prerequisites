@@ -1,6 +1,6 @@
 # See https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
 # Based on Ubuntu 18.04 since v0.11
-FROM phusion/baseimage:0.11
+FROM phusion/baseimage:bionic-1.0.0
 MAINTAINER AiiDA Team
 
 # Use the following arguments during *build* time:
@@ -80,8 +80,11 @@ RUN cd /tmp && \
     conda update --all --quiet --yes && \
     conda clean --all -f -y
 
+# Upgrade ruamel.py version. Fixes https://github.com/aiidateam/aiida-core/issues/4339.
+RUN conda install ruamel.yaml==0.16.10
+
 # This is needed to let non-root users create conda environments.
-RUN mkdir /opt/conda/pkgs && touch /opt/conda/pkgs/urls.txt
+RUN touch /opt/conda/pkgs/urls.txt
 
 # Create system user.
 COPY my_init.d/create-system-user.sh /etc/my_init.d/10_create-system-user.sh
