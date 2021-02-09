@@ -17,9 +17,13 @@ ENV SYSTEM_USER_GID ${NB_GID}
 ENV PYTHONPATH /home/$SYSTEM_USER
 ENV CONDA_DIR /opt/conda
 ENV PATH $CONDA_DIR/bin:$PATH
-ENV MINICONDA_VERSION 4.7.12.1
-ENV MINICONDA_MD5 81c773ff87af5cfac79ab862942ab6b3
-ENV CONDA_VERSION 4.8.2
+
+# Modify this section for the conda/python update.
+# This list of miniconda installer versions together with their SHA256 check sums are available:
+# https://docs.conda.io/en/latest/miniconda_hashes.html
+ENV MINICONDA_VERSION py37_4.9.2
+ENV MINICONDA_SHA256 79510c6e7bd9e012856e25dcb21b3e093aa4ac8113d9aa7e82a86987eabe1c31
+ENV CONDA_VERSION 4.9.2
 
 # Always activate /etc/profile, otherwise conda won't work.
 ENV BASH_ENV /etc/profile
@@ -67,7 +71,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 # Install conda.
 RUN cd /tmp && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    echo "${MINICONDA_MD5} *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | md5sum -c - && \
+    echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | sha256sum -c - && \
     /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
     echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
