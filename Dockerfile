@@ -21,9 +21,10 @@ ENV PATH $CONDA_DIR/bin:$PATH
 # Modify this section for the conda/python update.
 # This list of miniconda installer versions together with their SHA256 check sums are available:
 # https://docs.conda.io/en/latest/miniconda_hashes.html
-ENV MINICONDA_VERSION py37_4.9.2
-ENV MINICONDA_SHA256 79510c6e7bd9e012856e25dcb21b3e093aa4ac8113d9aa7e82a86987eabe1c31
+ENV PYTHON_VERSION py37
 ENV CONDA_VERSION 4.9.2
+ENV MINICONDA_VERSION ${PYTHON_VERSION}_${CONDA_VERSION}
+ENV MINICONDA_SHA256 79510c6e7bd9e012856e25dcb21b3e093aa4ac8113d9aa7e82a86987eabe1c31
 
 # Always activate /etc/profile, otherwise conda won't work.
 ENV BASH_ENV /etc/profile
