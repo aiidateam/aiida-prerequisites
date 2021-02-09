@@ -1,4 +1,6 @@
-# Make sure you source this script rather than executing it
+# This script ensures that the environment variables for the SSH agent are reused by all shells (including the AiiDA daemon)
+# See https://aiida.readthedocs.io/projects/aiida-core/en/v1.5.0/howto/ssh.html
+# Make sure to source this script rather than executing it
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
 then
     echo "You need to source this script, stopping." >&2
