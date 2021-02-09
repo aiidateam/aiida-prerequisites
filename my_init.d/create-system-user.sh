@@ -19,6 +19,9 @@ chown ${SYSTEM_USER}:${SYSTEM_USER} /home/${SYSTEM_USER}
 if [[ ! -f /home/${SYSTEM_USER}/.bashrc ]]; then
   cp -v /etc/skel/.bashrc  /home/${SYSTEM_USER}/
   echo "export PATH=$PATH:\"/home/${SYSTEM_USER}/.local/bin\"" >> /home/${SYSTEM_USER}/.bashrc
+  echo "if [ -f /usr/local/bin/load-singlesshagent.sh ]; then" >> /home/${SYSTEM_USER}/.bashrc
+  echo "   . /usr/local/bin/load-singlesshagent.sh" >> /home/${SYSTEM_USER}/.bashrc
+  echo "fi" >> /home/${SYSTEM_USER}/.bashrc
   PERFORM_CHOWN=true
 fi
 

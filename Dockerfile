@@ -91,6 +91,9 @@ RUN conda install ruamel.yaml==0.16.10
 # This is needed to let non-root users create conda environments.
 RUN touch /opt/conda/pkgs/urls.txt
 
+# Copy the script load-singlesshagent.sh to /usr/local/bin.
+COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
+
 # Create system user.
 COPY my_init.d/create-system-user.sh /etc/my_init.d/10_create-system-user.sh
 
