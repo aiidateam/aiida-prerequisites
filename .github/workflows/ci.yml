@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - 
-        echo ${{ secrets.DOCKER_USERNAME }} 
+        run: echo ${{ secrets.DOCKER_USERNAME }} 
       -
         uses: actions/checkout@v2
       -
