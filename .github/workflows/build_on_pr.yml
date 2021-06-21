@@ -54,9 +54,9 @@ jobs:
           docker exec --tty --user root $DOCKERID /bin/bash -l -c 'service rabbitmq-server status' # Check that rabbitmq is up.
           docker exec --tty --user aiida $DOCKERID /bin/bash -l -c 'conda create -y -n test_env python=3.8' # Check that one can create a new conda environment.
           docker exec --tty --user aiida $DOCKERID /bin/bash -l -c 'conda activate test_env' # Check that new environment works.
-          sudo cp tmp/.ssh/id_rsa . # Copying id_rsa file from the mounted folder.
+          sudo cp tmp/.ssh/id_rsa . # Copy id_rsa file from the mounted folder.
           docker stop $DOCKERID # Stopping the container.
-          export DOCKERID=`docker run -v $PWD/tmp:/home/aiida -d aiida-prerequisites` # Starting container using the same mounted folder.
+          export DOCKERID=`docker run -v $PWD/tmp:/home/aiida -d aiida-prerequisites` # Start a new container using the same mounted folder.
           docker exec --tty $DOCKERID wait-for-services
-          sudo diff id_rsa tmp/.ssh/id_rsa # Checking that the id_rsa file wasn't modified.
+          sudo diff id_rsa tmp/.ssh/id_rsa # Check that the id_rsa file wasn't modified.
 
