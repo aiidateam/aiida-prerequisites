@@ -45,11 +45,6 @@ jobs:
           cache-to: type=local,dest=/tmp/.buildx-cache
       -
         name: Start and test the container
-        uses: addnab/docker-run-action@v3
-        with:
-          image: aiida-prerequisites:latest
-          shell: bash
-          username: root
-          run: |
-            echo "Hello"
-            wait-for-services
+        run: |
+          export DOCKERID=`docker run -d aiida-prerequisites:latest`
+          docker exec --tty $DOCKERID wait-for-services
