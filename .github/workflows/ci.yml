@@ -18,8 +18,6 @@ jobs:
       tag: ${{ steps.setup.outputs.tag }}
 
     steps:
-      - 
-        run: echo ${{ secrets.DOCKER_USERNAME }} 
       -
         uses: actions/checkout@v2
       -
