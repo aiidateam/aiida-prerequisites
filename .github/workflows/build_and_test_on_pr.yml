@@ -1,21 +1,14 @@
-# Execute continuous integration tests for this docker image. This is to ensure that
-# new versions of the image do not break currently expected behavior and that the
-# environment provided by this image is compatible with a selected set of apps.
-
-name: build-image-from-pr
+name: build-and-test-image-from-pull-request
 
 on:
   [pull_request]
 
 jobs:
 
-  build-docker-image:
+  build-and-test:
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    outputs:
-      tag: ${{ steps.setup.outputs.tag }}
 
     steps:
       -

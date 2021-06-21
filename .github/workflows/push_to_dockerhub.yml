@@ -1,25 +1,19 @@
-# Execute continuous integration tests for this docker image. This is to ensure that
-# new versions of the image do not break currently expected behavior and that the
-# environment provided by this image is compatible with a selected set of apps.
-
 name: build-and-push-to-dockerhub
 
 on:
   push:
     branches:
-      - switch-to-github-actions
+      - master
+      - develop
     tags:
-      - '*'
+      - 'v*'
 
 jobs:
 
-  build-docker-image:
+  build-and-push:
 
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
-    outputs:
-      tag: ${{ steps.setup.outputs.tag }}
 
     steps:
       -
@@ -29,7 +23,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: aiidateam/aiida-prerequisites
+          images: ${{ github.repository }}
           tags: |
             type=ref,event=branch
             type=semver,pattern={{version}}
@@ -52,6 +46,3 @@ jobs:
         with:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
-      -
-        name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
