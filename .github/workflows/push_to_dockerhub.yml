@@ -8,6 +8,8 @@ on:
   push:
     branches:
       - switch-to-github-actions
+    tags:
+      - '*'
 
 jobs:
 
