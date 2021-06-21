@@ -43,3 +43,10 @@ jobs:
           tags: aiida-prerequisites
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+      -
+        name: Start and test the container
+        run: |
+          mkdir tmp
+          export DOCKERID=`docker run -v $PWD/tmp:/home/aiida -d aiida-prerequisites`
+          docker exec --tty --user root $DOCKERID wait-for-services
+          docker exec --tty --user aiida $DOCKERID wait-for-services
