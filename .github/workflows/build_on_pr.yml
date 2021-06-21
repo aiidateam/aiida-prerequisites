@@ -48,6 +48,8 @@ jobs:
         uses: addnab/docker-run-action@v3
         with:
           image: aiida-prerequisites:latest
+          shell: bash
+          username: root
           run: |
             echo "Hello"
             wait-for-services
