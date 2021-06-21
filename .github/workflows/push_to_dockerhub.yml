@@ -24,11 +24,15 @@ jobs:
     steps:
       -
         uses: actions/checkout@v2
-      - 
-        name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=tag;]$(echo ${GITHUB_REF#refs/*/})"
-        id: extract_branch
+      -
+        name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: aiidateam/aiida-prerequisites
+          tags: |
+            type=ref,event=branch
+            type=semver,pattern={{version}}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -47,7 +51,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: ${{ github.repository }}:${{ steps.extract_branch.outputs.tag }}
+          tags: ${{ steps.meta.outputs.tags }}
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
