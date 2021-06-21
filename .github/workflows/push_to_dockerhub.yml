@@ -22,6 +22,11 @@ jobs:
     steps:
       -
         uses: actions/checkout@v2
+      - 
+        name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       -
         name: Set image tag
         id: setup
@@ -63,3 +68,7 @@ jobs:
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
+
+      - 
+        name: Publish the branch name
+        run: echo ${{ steps.extract_branch.outputs.branch }}
