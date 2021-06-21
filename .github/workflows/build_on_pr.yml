@@ -40,8 +40,8 @@ jobs:
         with:
           push: false
           tags: aiida-prerequisites:latest
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+#          cache-from: type=local,src=/tmp/.buildx-cache
+#          cache-to: type=local,dest=/tmp/.buildx-cache
       -
         name: Start and test the container
         uses: addnab/docker-run-action@v3
