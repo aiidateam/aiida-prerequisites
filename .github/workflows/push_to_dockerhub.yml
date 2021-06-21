@@ -28,13 +28,6 @@ jobs:
         run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
         id: extract_branch
       -
-        name: Set image tag
-        id: setup
-        run: |
-          IMAGE_REF=`echo ${{ github.sha }} | sed 's/^\(.......\).*/\1/'`
-          TAG="sha-${IMAGE_REF}"
-          echo "::set-output name=tag::sha-${IMAGE_REF}"
-      -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v1
       -
@@ -60,15 +53,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: |
-            ${{ github.repository }}:latest
-            ${{ github.repository }}:${{ steps.setup.outputs.tag }}
+          tags: ${{ github.repository }}:${{ steps.extract_branch.outputs.branch }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-
-      - 
-        name: Publish the branch name
-        run: echo ${{ steps.extract_branch.outputs.branch }}
