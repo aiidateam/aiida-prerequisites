@@ -1,3 +1,6 @@
+# Build the new Docker image on every commit to master/develop branch and on every new tag.
+# No caching is involved for the image build. The new image is then pushed to the Docker Hub. 
+
 name: build-and-push-to-dockerhub
 
 on:
