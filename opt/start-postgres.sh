@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PGBIN=/usr/lib/postgresql/10/bin
+PGSQL_VERSION=12
+PGBIN=/usr/lib/postgresql/${PGSQL_VERSION}/bin
 
 # -w waits until server is up
 PSQL_START_CMD="${PGBIN}/pg_ctl --timeout=180 -w -D /home/${SYSTEM_USER}/.postgresql -l /home/${SYSTEM_USER}/.postgresql/logfile start"
@@ -11,7 +12,7 @@ PSQL_STATUS_CMD="${PGBIN}/pg_ctl -D /home/${SYSTEM_USER}/.postgresql status"
 if [ ! -d /home/${SYSTEM_USER}/.postgresql ]; then
    mkdir /home/${SYSTEM_USER}/.postgresql
    ${PGBIN}/initdb -D /home/${SYSTEM_USER}/.postgresql
-   echo "unix_socket_directories = '/home/${SYSTEM_USER}/.postgresql'" >> /home/${SYSTEM_USER}/.postgresql/postgresql.conf
+   echo "unix_socket_directories = '/tmp'" >> /home/${SYSTEM_USER}/.postgresql/postgresql.conf
    ${PSQL_START_CMD}
 
 # else don't
@@ -27,8 +28,6 @@ else
     # Postgresql was probably not shutdown properly. Cleaning up the mess...
     if ! $running ; then
        echo "" > /home/${SYSTEM_USER}/.postgresql/logfile # empty log files
-       rm -vf /home/${SYSTEM_USER}/.postgresql/.s.PGSQL.5432
-       rm -vf /home/${SYSTEM_USER}/.postgresql/.s.PGSQL.5432.lock
        rm -vf /home/${SYSTEM_USER}/.postgresql/postmaster.pid
        ${PSQL_START_CMD}
    fi
