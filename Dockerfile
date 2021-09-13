@@ -86,6 +86,7 @@ RUN cd /tmp && \
     conda clean --all -f -y
 
 # Upgrade ruamel.py version. Fixes https://github.com/aiidateam/aiida-core/issues/4339.
+# Note: miniconda 4.10.3 installs 0.15.80 by default
 RUN conda install ruamel.yaml==0.16.10
 
 # This is needed to let non-root users create conda environments.

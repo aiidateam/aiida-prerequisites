@@ -1,6 +1,7 @@
 #!/bin/bash
 
-PGBIN=/usr/lib/postgresql/10/bin
+PGSQL_VERSION=12
+PGBIN=/usr/lib/postgresql/${PGSQL_VERSION}/bin
 
 # -w waits until server is up
 PSQL_START_CMD="${PGBIN}/pg_ctl --timeout=180 -w -D /home/${SYSTEM_USER}/.postgresql -l /home/${SYSTEM_USER}/.postgresql/logfile start"
