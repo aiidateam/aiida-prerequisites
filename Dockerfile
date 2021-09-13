@@ -1,6 +1,6 @@
 # See https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
-# Based on Ubuntu 18.04 since v0.11
-FROM phusion/baseimage:bionic-1.0.0
+# Based on Ubuntu 20.04
+FROM phusion/baseimage:focal-1.1.0
 MAINTAINER AiiDA Team
 
 # Use the following arguments during *build* time:
@@ -21,10 +21,10 @@ ENV PATH $CONDA_DIR/bin:$PATH
 # Modify this section for the conda/python update.
 # This list of miniconda installer versions together with their SHA256 check sums are available:
 # https://docs.conda.io/en/latest/miniconda_hashes.html
-ENV PYTHON_VERSION py37
-ENV CONDA_VERSION 4.9.2
+ENV PYTHON_VERSION py38
+ENV CONDA_VERSION 4.10.3
 ENV MINICONDA_VERSION ${PYTHON_VERSION}_${CONDA_VERSION}
-ENV MINICONDA_SHA256 79510c6e7bd9e012856e25dcb21b3e093aa4ac8113d9aa7e82a86987eabe1c31
+ENV MINICONDA_SHA256 935d72deb16e42739d69644977290395561b7a6db059b316958d97939e9bdf3d
 
 # Always activate /etc/profile, otherwise conda won't work.
 ENV BASH_ENV /etc/profile
