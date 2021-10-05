@@ -41,7 +41,6 @@ The following environment variables can be set during container *startup*:
 ENV SYSTEM_USER ${NB_USER}
 ENV SYSTEM_USER_UID ${NB_UID}
 ENV SYSTEM_USER_GID ${NB_GID}
-ENV PYTHONPATH /home/$SYSTEM_USER
 ```
 
 To modify their value do the following:
