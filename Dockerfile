@@ -1,6 +1,6 @@
 # See https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
 # Based on Ubuntu 20.04
-FROM phusion/baseimage:focal-1.1.0
+FROM phusion/baseimage:impish
 MAINTAINER AiiDA Team
 
 # Use the following arguments during *build* time:
@@ -23,7 +23,6 @@ ENV PATH $CONDA_DIR/bin:$PATH
 ENV PYTHON_VERSION py38
 ENV CONDA_VERSION 4.10.3
 ENV MINICONDA_VERSION ${PYTHON_VERSION}_${CONDA_VERSION}
-ENV MINICONDA_SHA256 935d72deb16e42739d69644977290395561b7a6db059b316958d97939e9bdf3d
 
 # Always activate /etc/profile, otherwise conda won't work.
 ENV BASH_ENV /etc/profile
@@ -38,7 +37,8 @@ ENV LANGUAGE en_US.UTF-8
 
 # Add switch mirror to fix the issue.
 # https://github.com/aiidalab/aiidalab-docker-stack/issues/9
-RUN echo "deb http://mirror.switch.ch/ftp/mirror/ubuntu/ bionic main \ndeb-src http://mirror.switch.ch/ftp/mirror/ubuntu/ bionic main \n" >> /etc/apt/sources.list
+# Not sure needed continue. This mirror not contains packages for arm64 therefore commented
+# RUN echo "deb http://mirror.switch.ch/ftp/mirror/ubuntu/ bionic main \ndeb-src http://mirror.switch.ch/ftp/mirror/ubuntu/ bionic main \n" >> /etc/apt/sources.list
 
 # Install debian packages.
 # Note: prefix all 'apt-get install' lines with 'apt-get update' to prevent failures in partial rebuilds
@@ -47,6 +47,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
     tzdata
 
 # Install required ubuntu packages.
+# The libpq-dev is needed for arm64 to pypi build psycopg2-binary in aiida-core
 RUN apt-get update && apt-get install -y --no-install-recommends  \
     build-essential       \
     bzip2                 \
@@ -65,23 +66,36 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
     vim                   \
     wget                  \
     zip                   \
+    libpq-dev             \
   && rm -rf /var/lib/apt/lists/* \
   && apt-get clean all
 
 # Install conda.
 RUN cd /tmp && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh" | sha256sum -c - && \
-    /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
-    rm Miniconda3-${MINICONDA_VERSION}-Linux-x86_64.sh && \
-    echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned && \
-    conda config --system --prepend channels conda-forge && \
-    conda config --system --set auto_update_conda false && \
-    conda config --system --set show_channel_urls true && \
-    conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned && \
-    conda install --quiet --yes conda && \
-    conda install --quiet --yes pip && \
-    conda update --all --quiet --yes && \
+    export ARCH=`uname -m` && \
+    if [ "$ARCH" = "x86_64" ]; then \
+       echo "x86_64" && \
+       export MINICONDA_ARCH=x86_64 && \
+       export MINICONDA_SHA256=935d72deb16e42739d69644977290395561b7a6db059b316958d97939e9bdf3d; \
+    elif [ "$ARCH" = "aarch64" ]; then \
+       echo "aarch64" && \
+       export MINICONDA_ARCH=aarch64 && \
+       export MINICONDA_SHA256=19584b4fb5c0656e0cf9de72aaa0b0a7991fbd6f1254d12e2119048c9a47e5cc; \
+    else \
+       echo "unknown arch"; \
+    fi && \
+    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
+    echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh" | sha256sum -c - && \
+    /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh -f -b -p $CONDA_DIR && \
+    rm Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
+    echo "conda ${CONDA_VERSION}" >> $CONDA_DIR/conda-meta/pinned  && \
+    conda config --system --prepend channels conda-forge  && \
+    conda config --system --set auto_update_conda false  && \
+    conda config --system --set show_channel_urls true  && \
+    conda list python | grep '^python ' | tr -s ' ' | cut -d '.' -f 1,2 | sed 's/$/.*/' >> $CONDA_DIR/conda-meta/pinned  && \
+    conda install --quiet --yes conda  && \
+    conda install --quiet --yes pip  && \
+    conda update --all --quiet --yes  && \
     conda clean --all -f -y
 
 # Upgrade ruamel.py version. Fixes https://github.com/aiidateam/aiida-core/issues/4339.
