@@ -1,7 +1,7 @@
 # See https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
 # Based on Ubuntu 20.04
-FROM phusion/baseimage:impish
-MAINTAINER AiiDA Team
+FROM phusion/baseimage:jammy-1.0.0
+LABEL maintainer="AiiDA Team"
 
 # Use the following arguments during *build* time:
 # $ docker build  --build-arg NB_UID=200
