@@ -14,6 +14,8 @@ fi
 # Always make sure that /home/${SYSTEM_USER} folder is owned by ${SYSTEM_USER}.
 chown ${SYSTEM_USER}:${SYSTEM_USER} /home/${SYSTEM_USER}
 
+# make sure current user does have write permissions to conda path
+chown ${SYSTEM_USER}:${SYSTEM_USER} ${CONDA_DIR}
 
 # Add .bashrc file to the $SYSTEM_USER's home folder.
 if [[ ! -f /home/${SYSTEM_USER}/.bashrc ]]; then

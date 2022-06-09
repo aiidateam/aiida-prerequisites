@@ -20,8 +20,8 @@ ENV PATH $CONDA_DIR/bin:$PATH
 # Modify this section for the conda/python update.
 # This list of miniconda installer versions together with their SHA256 check sums are available:
 # https://docs.conda.io/en/latest/miniconda_hashes.html
-ENV PYTHON_VERSION py39
-ENV CONDA_VERSION 4.12.0
+ENV PYTHON_VERSION py38
+ENV CONDA_VERSION 4.10.3
 ENV MINICONDA_VERSION ${PYTHON_VERSION}_${CONDA_VERSION}
 
 # Always activate /etc/profile, otherwise conda won't work.
@@ -71,11 +71,11 @@ RUN cd /tmp && \
     if [ "$ARCH" = "x86_64" ]; then \
        echo "x86_64" && \
        export MINICONDA_ARCH=x86_64 && \
-       export MINICONDA_SHA256=78f39f9bae971ec1ae7969f0516017f2413f17796670f7040725dd83fcff5689; \
+       export MINICONDA_SHA256=935d72deb16e42739d69644977290395561b7a6db059b316958d97939e9bdf3d; \
     elif [ "$ARCH" = "aarch64" ]; then \
        echo "aarch64" && \
        export MINICONDA_ARCH=aarch64 && \
-       export MINICONDA_SHA256=5f4f865812101fdc747cea5b820806f678bb50fe0a61f19dc8aa369c52c4e513; \
+       export MINICONDA_SHA256=19584b4fb5c0656e0cf9de72aaa0b0a7991fbd6f1254d12e2119048c9a47e5cc; \
     else \
        echo "unknown arch"; \
     fi && \
@@ -92,9 +92,6 @@ RUN cd /tmp && \
     conda install --quiet --yes pip  && \
     conda update --all --quiet --yes  && \
     conda clean --all -f -y
-
-# This is needed to let non-root users create conda environments.
-RUN touch /opt/conda/pkgs/urls.txt
 
 # Copy the script load-singlesshagent.sh to /usr/local/bin.
 COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
