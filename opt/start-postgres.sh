@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PGSQL_VERSION=12
+PGSQL_VERSION=14
 PGBIN=/usr/lib/postgresql/${PGSQL_VERSION}/bin
 
 # -w waits until server is up
