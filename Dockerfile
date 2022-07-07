@@ -21,7 +21,7 @@ ENV PATH $CONDA_DIR/bin:$PATH
 # This list of miniconda installer versions together with their SHA256 check sums are available:
 # https://docs.conda.io/en/latest/miniconda_hashes.html
 ENV PYTHON_VERSION py38
-ENV CONDA_VERSION 4.10.3
+ENV CONDA_VERSION 4.12.0
 ENV MINICONDA_VERSION ${PYTHON_VERSION}_${CONDA_VERSION}
 
 # Always activate /etc/profile, otherwise conda won't work.
@@ -71,13 +71,13 @@ RUN cd /tmp && \
     if [ "$ARCH" = "x86_64" ]; then \
        echo "x86_64" && \
        export MINICONDA_ARCH=x86_64 && \
-       export MINICONDA_SHA256=935d72deb16e42739d69644977290395561b7a6db059b316958d97939e9bdf3d; \
+       export MINICONDA_SHA256=3190da6626f86eee8abf1b2fd7a5af492994eb2667357ee4243975cdbb175d7a; \
     elif [ "$ARCH" = "aarch64" ]; then \
        echo "aarch64" && \
        export MINICONDA_ARCH=aarch64 && \
-       export MINICONDA_SHA256=19584b4fb5c0656e0cf9de72aaa0b0a7991fbd6f1254d12e2119048c9a47e5cc; \
+       export MINICONDA_SHA256=0c20f121dc4c8010032d64f8e9b27d79e52d28355eb8d7972eafc90652387777; \
     else \
-       echo "unknown arch"; \
+       echo "unknown arch: ${ARCH}"; \
     fi && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
     echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh" | sha256sum -c - && \
