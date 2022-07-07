@@ -93,6 +93,9 @@ RUN cd /tmp && \
     conda update --all --quiet --yes  && \
     conda clean --all -f -y
 
+# This is needed to let non-root users create conda environments.
+RUN mkdir -p /opt/conda/pkgs && touch /opt/conda/pkgs/urls.txt
+
 # Copy the script load-singlesshagent.sh to /usr/local/bin.
 COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
 
