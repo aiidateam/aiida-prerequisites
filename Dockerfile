@@ -52,7 +52,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
     graphviz              \
     locales               \
     less                  \
-    postgresql            \
     psmisc                \
     rabbitmq-server       \
     rsync                 \
@@ -92,6 +91,9 @@ RUN cd /tmp && \
     conda install --quiet --yes pip  && \
     conda update --all --quiet --yes  && \
     conda clean --all -f -y
+
+# Install PostgreSQL in a dedicated conda environment.
+RUN conda create -c conda-forge -n pgsql postgresql=14 && conda clean --all -f -y
 
 # Copy the script load-singlesshagent.sh to /usr/local/bin.
 COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
