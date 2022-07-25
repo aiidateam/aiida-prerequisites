@@ -47,6 +47,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 RUN apt-get update && apt-get install -y --no-install-recommends  \
     build-essential       \
     bzip2                 \
+    erlang                \
     git                   \
     gir1.2-gtk-3.0        \
     gnupg                 \
@@ -54,7 +55,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
     locales               \
     less                  \
     psmisc                \
-    rabbitmq-server       \
     rsync                 \
     ssh                   \
     unzip                 \
@@ -76,7 +76,7 @@ RUN cd /tmp && \
        export MINICONDA_ARCH=aarch64 && \
        export MINICONDA_SHA256=0c20f121dc4c8010032d64f8e9b27d79e52d28355eb8d7972eafc90652387777; \
     else \
-       echo "unknown ARCH: ${TARGETARCH}}"; \
+       echo "Unknown architecture: ${TARGETARCH}."; \
     fi && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
     echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh" | sha256sum -c - && \
@@ -95,6 +95,20 @@ RUN cd /tmp && \
 # Install PostgreSQL in a dedicated conda environment.
 RUN conda create -c conda-forge -n pgsql postgresql=10 && conda clean --all -f -y
 
+# Install RabbitMQ in a dedicated conda environment.
+# If the architecture is arm64, we install the default version of rabbitmq provided by Ubuntu.
+RUN if [ "$TARGETARCH" = "x86_64" ]; then \
+   conda create -c conda-forge -n rmq rabbitmq-server=3.8.14 && conda clean --all -f -y; \
+elif [ "$TARGETARCH" = "aarch64" ]; then \
+   apt-get update && apt-get install -y --no-install-recommends  \
+       rabbitmq-server && \
+       rm -rf /var/lib/apt/lists/* && \
+       apt-get clean all; \
+else \
+   echo "Unknown architecture: ${TARGETARCH}."; \
+fi
+
+
 # Copy the script load-singlesshagent.sh to /usr/local/bin.
 COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
 
@@ -102,7 +116,8 @@ COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
 COPY my_init.d/create-system-user.sh /etc/my_init.d/10_create-system-user.sh
 
 # Launch rabbitmq server
-COPY my_init.d/start-rabbitmq-${TARGETARCH}.sh /etc/my_init.d/20_start-rabbitmq.sh
+COPY opt/start-rabbitmq-${TARGETARCH}.sh /opt/start-rabbitmq.sh
+COPY my_init.d/start-rabbitmq.sh /etc/my_init.d/20_start-rabbitmq.sh
 
 # Launch postgres server.
 COPY opt/start-postgres.sh /opt/start-postgres.sh
