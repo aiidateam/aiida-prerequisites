@@ -93,7 +93,7 @@ RUN cd /tmp && \
     conda clean --all -f -y
 
 # Install PostgreSQL in a dedicated conda environment.
-RUN conda create -c conda-forge -n pgsql postgresql=10.6 && conda clean --all -f -y
+RUN conda create -c conda-forge -n pgsql postgresql=10 && conda clean --all -f -y
 
 # Copy the script load-singlesshagent.sh to /usr/local/bin.
 COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
