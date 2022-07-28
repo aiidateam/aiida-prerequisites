@@ -43,10 +43,20 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       -
-        name: Build and push
+        name: Build and push (amd64)
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: ${{ steps.meta.outputs.tags }}
+          build-args: ARCH=amd64
+      -
+        name: Build and push (arm64)
+        id: docker_build
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          platforms: linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          build-args: ARCH=arm64
