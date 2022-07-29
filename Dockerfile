@@ -1,5 +1,5 @@
 # See https://github.com/phusion/baseimage-docker/blob/master/Changelog.md
-# Based on Ubuntu 20.04
+# Based on Ubuntu 22.04
 FROM phusion/baseimage:jammy-1.0.0
 LABEL maintainer="AiiDA Team"
 
@@ -8,6 +8,7 @@ LABEL maintainer="AiiDA Team"
 ARG NB_USER="aiida"
 ARG NB_UID="1000"
 ARG NB_GID="1000"
+ARG TARGETARCH
 
 # Use the following variables when running docker:
 # $ docker run -e SYSTEM_USER=aiida2
@@ -21,7 +22,7 @@ ENV PATH $CONDA_DIR/bin:$PATH
 # This list of miniconda installer versions together with their SHA256 check sums are available:
 # https://docs.conda.io/en/latest/miniconda_hashes.html
 ENV PYTHON_VERSION py38
-ENV CONDA_VERSION 4.10.3
+ENV CONDA_VERSION 4.12.0
 ENV MINICONDA_VERSION ${PYTHON_VERSION}_${CONDA_VERSION}
 
 # Always activate /etc/profile, otherwise conda won't work.
@@ -46,15 +47,14 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
 RUN apt-get update && apt-get install -y --no-install-recommends  \
     build-essential       \
     bzip2                 \
+    erlang                \
     git                   \
     gir1.2-gtk-3.0        \
     gnupg                 \
     graphviz              \
     locales               \
     less                  \
-    postgresql            \
     psmisc                \
-    rabbitmq-server       \
     rsync                 \
     ssh                   \
     unzip                 \
@@ -67,17 +67,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 
 # Install conda.
 RUN cd /tmp && \
-    export ARCH=`uname -m` && \
-    if [ "$ARCH" = "x86_64" ]; then \
+    if [ "$TARGETARCH" = "amd64" ]; then \
        echo "x86_64" && \
        export MINICONDA_ARCH=x86_64 && \
-       export MINICONDA_SHA256=935d72deb16e42739d69644977290395561b7a6db059b316958d97939e9bdf3d; \
-    elif [ "$ARCH" = "aarch64" ]; then \
+       export MINICONDA_SHA256=3190da6626f86eee8abf1b2fd7a5af492994eb2667357ee4243975cdbb175d7a; \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
        echo "aarch64" && \
        export MINICONDA_ARCH=aarch64 && \
-       export MINICONDA_SHA256=19584b4fb5c0656e0cf9de72aaa0b0a7991fbd6f1254d12e2119048c9a47e5cc; \
+       export MINICONDA_SHA256=0c20f121dc4c8010032d64f8e9b27d79e52d28355eb8d7972eafc90652387777; \
     else \
-       echo "unknown arch"; \
+       echo "Unknown architecture: ${TARGETARCH}."; \
     fi && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
     echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh" | sha256sum -c - && \
@@ -93,6 +92,28 @@ RUN cd /tmp && \
     conda update --all --quiet --yes  && \
     conda clean --all -f -y
 
+# Install PostgreSQL in a dedicated conda environment.
+RUN conda create -c conda-forge -n pgsql postgresql=10 && conda clean --all -f -y
+
+# Below is a solution to a strange bug with PGSQL=10
+# Taken from https://github.com/tethysplatform/tethys/issues/667.
+# This bug is not present for PGSQL=14. So as soon as we migrate, the line below can be removed.
+RUN cp /usr/share/zoneinfo /opt/conda/envs/pgsql/share/ -R
+
+# Install RabbitMQ in a dedicated conda environment.
+# If the architecture is arm64, we install the default version of rabbitmq provided by Ubuntu.
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
+   conda create -c conda-forge -n rmq rabbitmq-server=3.8.14 && conda clean --all -f -y; \
+elif [ "$TARGETARCH" = "arm64" ]; then \
+   apt-get update && apt-get install -y --no-install-recommends  \
+       rabbitmq-server && \
+       rm -rf /var/lib/apt/lists/* && \
+       apt-get clean all; \
+else \
+   echo "Unknown architecture: ${TARGETARCH}."; \
+fi
+
+
 # Copy the script load-singlesshagent.sh to /usr/local/bin.
 COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
 
@@ -100,6 +121,7 @@ COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
 COPY my_init.d/create-system-user.sh /etc/my_init.d/10_create-system-user.sh
 
 # Launch rabbitmq server
+COPY opt/start-rabbitmq-${TARGETARCH}.sh /opt/start-rabbitmq.sh
 COPY my_init.d/start-rabbitmq.sh /etc/my_init.d/20_start-rabbitmq.sh
 
 # Launch postgres server.

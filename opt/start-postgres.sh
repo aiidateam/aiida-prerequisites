@@ -1,17 +1,17 @@
 #!/bin/bash
 
-PGSQL_VERSION=14
-PGBIN=/usr/lib/postgresql/${PGSQL_VERSION}/bin
+# Activate the conda environment with PostgreSQL installed in it.
+conda activate pgsql
 
 # -w waits until server is up
-PSQL_START_CMD="${PGBIN}/pg_ctl --timeout=180 -w -D /home/${SYSTEM_USER}/.postgresql -l /home/${SYSTEM_USER}/.postgresql/logfile start"
-PSQL_STOP_CMD="${PGBIN}/pg_ctl -w -D /home/${SYSTEM_USER}/.postgresql stop"
-PSQL_STATUS_CMD="${PGBIN}/pg_ctl -D /home/${SYSTEM_USER}/.postgresql status"
+PSQL_START_CMD="pg_ctl --timeout=180 -w -D /home/${SYSTEM_USER}/.postgresql -l /home/${SYSTEM_USER}/.postgresql/logfile start"
+PSQL_STOP_CMD="pg_ctl -w -D /home/${SYSTEM_USER}/.postgresql stop"
+PSQL_STATUS_CMD="pg_ctl -D /home/${SYSTEM_USER}/.postgresql status"
 
 # make DB directory, if not existent
 if [ ! -d /home/${SYSTEM_USER}/.postgresql ]; then
    mkdir /home/${SYSTEM_USER}/.postgresql
-   ${PGBIN}/initdb -D /home/${SYSTEM_USER}/.postgresql
+   initdb -D /home/${SYSTEM_USER}/.postgresql
    echo "unix_socket_directories = '/tmp'" >> /home/${SYSTEM_USER}/.postgresql/postgresql.conf
    ${PSQL_START_CMD}
 
