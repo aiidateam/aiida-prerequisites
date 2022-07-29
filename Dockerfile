@@ -97,9 +97,9 @@ RUN conda create -c conda-forge -n pgsql postgresql=10 && conda clean --all -f -
 
 # Install RabbitMQ in a dedicated conda environment.
 # If the architecture is arm64, we install the default version of rabbitmq provided by Ubuntu.
-RUN if [ "$TARGETARCH" = "x86_64" ]; then \
+RUN if [ "$TARGETARCH" = "amd64" ]; then \
    conda create -c conda-forge -n rmq rabbitmq-server=3.8.14 && conda clean --all -f -y; \
-elif [ "$TARGETARCH" = "aarch64" ]; then \
+elif [ "$TARGETARCH" = "arm64" ]; then \
    apt-get update && apt-get install -y --no-install-recommends  \
        rabbitmq-server && \
        rm -rf /var/lib/apt/lists/* && \
