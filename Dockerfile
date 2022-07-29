@@ -95,6 +95,11 @@ RUN cd /tmp && \
 # Install PostgreSQL in a dedicated conda environment.
 RUN conda create -c conda-forge -n pgsql postgresql=10 && conda clean --all -f -y
 
+# Below is a solution to a strange bug with PGSQL=10
+# Taken from https://github.com/tethysplatform/tethys/issues/667.
+# This bug is not present for PGSQL=14. So as soon as we migrate, the line below can be removed.
+RUN cp /usr/share/zoneinfo /opt/conda/envs/pgsql/share/ -R
+
 # Install RabbitMQ in a dedicated conda environment.
 # If the architecture is arm64, we install the default version of rabbitmq provided by Ubuntu.
 RUN if [ "$TARGETARCH" = "amd64" ]; then \
