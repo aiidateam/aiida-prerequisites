@@ -8,7 +8,7 @@ LABEL maintainer="AiiDA Team"
 ARG NB_USER="aiida"
 ARG NB_UID="1000"
 ARG NB_GID="1000"
-ARG ARCH
+ARG TARGETARCH
 
 # Use the following variables when running docker:
 # $ docker run -e SYSTEM_USER=aiida2
@@ -67,17 +67,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 
 # Install conda.
 RUN cd /tmp && \
-   #  export ARCH=`uname -m` && \
-    if [ "$ARCH" = "amd64" ]; then \
+    if [ "$TARGETARCH" = "amd64" ]; then \
        echo "x86_64" && \
        export MINICONDA_ARCH=x86_64 && \
        export MINICONDA_SHA256=3190da6626f86eee8abf1b2fd7a5af492994eb2667357ee4243975cdbb175d7a; \
-    elif [ "$ARCH" = "arm64" ]; then \
+    elif [ "$TARGETARCH" = "arm64" ]; then \
        echo "aarch64" && \
        export MINICONDA_ARCH=aarch64 && \
        export MINICONDA_SHA256=0c20f121dc4c8010032d64f8e9b27d79e52d28355eb8d7972eafc90652387777; \
     else \
-       echo "unknown ARCH: ${ARCH}"; \
+       echo "unknown ARCH: ${TARGETARCH}}"; \
     fi && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
     echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh" | sha256sum -c - && \
@@ -103,7 +102,7 @@ COPY bin/load-singlesshagent.sh /usr/local/bin/load-singlesshagent.sh
 COPY my_init.d/create-system-user.sh /etc/my_init.d/10_create-system-user.sh
 
 # Launch rabbitmq server
-COPY my_init.d/start-rabbitmq-${ARCH}.sh /etc/my_init.d/20_start-rabbitmq.sh
+COPY my_init.d/start-rabbitmq-${TARGETARCH}.sh /etc/my_init.d/20_start-rabbitmq.sh
 
 # Launch postgres server.
 COPY opt/start-postgres.sh /opt/start-postgres.sh
