@@ -67,7 +67,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends  \
 
 # Install conda.
 RUN cd /tmp && \
-   #  export ARCH=`uname -m` && \
     if [ "$TARGETARCH" = "amd64" ]; then \
        echo "x86_64" && \
        export MINICONDA_ARCH=x86_64 && \
