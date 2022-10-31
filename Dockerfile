@@ -93,7 +93,7 @@ RUN cd /tmp && \
     conda clean --all -f -y
 
 # Install PostgreSQL in a dedicated conda environment.
-RUN conda create -c conda-forge -n pgsql postgresql=10 && conda clean --all -f -y
+RUN conda create -c conda-forge -n pgsql postgresql=12 && conda clean --all -f -y
 
 # Below is a solution to a strange bug with PGSQL=10
 # Taken from https://github.com/tethysplatform/tethys/issues/667.
