@@ -34,9 +34,6 @@ else
 
    if $cant_start; then
       echo "Postgresql could not be started. Maybe the database needs to be migrated."
-      NEW_VERSION=`psql -V | awk '{ print int( $3 ) }'`
-      OLD_VERSION=`cat /home/${SYSTEM_USER}/.postgresql/PG_VERSION && echo ${version%.*}`
-      echo "old_version: ${OLD_VERSION}
-new_version: ${NEW_VERSION}" > /home/$SYSTEM_USER/.PGSQL_MIGRATION_REQUIRED
+      touch /home/$SYSTEM_USER/.PGSQL_MIGRATION_REQUIRED
    fi
 fi

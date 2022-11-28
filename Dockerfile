@@ -140,5 +140,8 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
 # Always activate conda.
 COPY profile.d/activate_conda.sh /etc/profile.d/
 
+# Add database migration script.
+COPY opt/migrate-database.sh /opt/migrate-database.sh
+
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
