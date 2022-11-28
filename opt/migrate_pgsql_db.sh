@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -exuo pipefail
 OLD_PGSQL_DB_VERSION=10
 NEW_PGSQL_DB_VERSION=12
 
