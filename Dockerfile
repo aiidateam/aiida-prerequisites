@@ -21,7 +21,7 @@ ENV PATH $CONDA_DIR/bin:$PATH
 # Modify this section for the conda/python update.
 # This list of miniconda installer versions together with their SHA256 check sums are available:
 # https://docs.conda.io/en/latest/miniconda_hashes.html
-ENV PYTHON_VERSION py38
+ENV PYTHON_VERSION py39
 ENV CONDA_VERSION 4.12.0
 ENV MINICONDA_VERSION ${PYTHON_VERSION}_${CONDA_VERSION}
 
@@ -70,15 +70,15 @@ RUN cd /tmp && \
     if [ "$TARGETARCH" = "amd64" ]; then \
        echo "x86_64" && \
        export MINICONDA_ARCH=x86_64 && \
-       export MINICONDA_SHA256=3190da6626f86eee8abf1b2fd7a5af492994eb2667357ee4243975cdbb175d7a; \
+       export MINICONDA_SHA256=78f39f9bae971ec1ae7969f0516017f2413f17796670f7040725dd83fcff5689; \
     elif [ "$TARGETARCH" = "arm64" ]; then \
        echo "aarch64" && \
        export MINICONDA_ARCH=aarch64 && \
-       export MINICONDA_SHA256=0c20f121dc4c8010032d64f8e9b27d79e52d28355eb8d7972eafc90652387777; \
+       export MINICONDA_SHA256=5f4f865812101fdc747cea5b820806f678bb50fe0a61f19dc8aa369c52c4e513; \
     else \
        echo "Unknown architecture: ${TARGETARCH}."; \
     fi && \
-    wget --quiet https://repo.continuum.io/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
+    wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
     echo "${MINICONDA_SHA256} *Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh" | sha256sum -c - && \
     /bin/bash Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh -f -b -p $CONDA_DIR && \
     rm Miniconda3-${MINICONDA_VERSION}-Linux-${MINICONDA_ARCH}.sh && \
