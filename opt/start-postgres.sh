@@ -29,6 +29,11 @@ else
     if ! $running ; then
        echo "" > /home/${SYSTEM_USER}/.postgresql/logfile # empty log files
        rm -vf /home/${SYSTEM_USER}/.postgresql/postmaster.pid
-       ${PSQL_START_CMD}
+       ${PSQL_START_CMD} || cant_start=true
+   fi
+
+   if $cant_start; then
+      echo "Postgresql could not be started. Maybe the database needs to be migrated."
+      touch /home/$SYSTEM_USER/.PGSQL_MIGRATION_REQUIRED
    fi
 fi

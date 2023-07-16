@@ -93,7 +93,7 @@ RUN cd /tmp && \
     conda clean --all -f -y
 
 # Install PostgreSQL in a dedicated conda environment.
-RUN conda create -c conda-forge -n pgsql postgresql=10 && conda clean --all -f -y
+RUN conda create -c conda-forge -n pgsql postgresql=12 && conda clean --all -f -y
 
 # Below is a solution to a strange bug with PGSQL=10
 # Taken from https://github.com/tethysplatform/tethys/issues/667.
@@ -139,6 +139,9 @@ RUN sed -i 's/^#force_color_prompt=yes/force_color_prompt=yes/' /etc/skel/.bashr
 
 # Always activate conda.
 COPY profile.d/activate_conda.sh /etc/profile.d/
+
+# Add database migration script.
+COPY opt/migrate-database.sh /opt/migrate-database.sh
 
 # Use baseimage-docker's init system.
 CMD ["/sbin/my_init"]
